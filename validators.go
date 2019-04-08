@@ -132,7 +132,11 @@ func Between(x, lower interface{}, upper interface{}) ValidateFunc {
 func In(x interface{}, elems ...interface{}) ValidateFunc {
 	return func() error {
 		for _, elem := range elems {
-			if equals(x, elem) {
+			cmpField, err := newCmpField(eq, elem)
+			if err != nil {
+				return err
+			}
+			if err = compare(x, cmpField); err == nil {
 				return nil
 			}
 		}
@@ -145,7 +149,11 @@ func In(x interface{}, elems ...interface{}) ValidateFunc {
 func NotIn(x interface{}, elems ...interface{}) ValidateFunc {
 	return func() error {
 		for _, elem := range elems {
-			if equals(x, elem) {
+			cmpField, err := newCmpField(eq, elem)
+			if err != nil {
+				return err
+			}
+			if err = compare(x, cmpField); err == nil {
 				return fmt.Errorf("`not in` comparison failed: `%v` in `%v`", x, elems)
 			}
 		}
