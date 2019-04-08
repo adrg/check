@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func equals(x, y interface{}) bool {
+func equal(x, y interface{}) bool {
 	return reflect.DeepEqual(x, y)
 }
 

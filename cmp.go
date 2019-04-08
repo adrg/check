@@ -239,9 +239,9 @@ func compareInterface(x interface{}, cmp *cmpField) error {
 	var ok bool
 	switch op {
 	case eq:
-		ok = equals(x, term)
+		ok = equal(x, term)
 	case ne:
-		ok = !equals(x, term)
+		ok = !equal(x, term)
 	default:
 		return fmt.Errorf("invalid operation `%s` for values `%v` and `%v`", cmpOps[op], x, term)
 	}
