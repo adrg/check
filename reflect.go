@@ -72,6 +72,19 @@ func toFloat64(x interface{}) (float64, error) {
 	return 0, fmt.Errorf("cannot convert `%v` to type float64", kind)
 }
 
+func toString(x interface{}) (string, error) {
+	if x == nil {
+		return "", errors.New("cannot convert nil to type string")
+	}
+
+	v, ok := x.(string)
+	if !ok {
+		return "", fmt.Errorf("cannot convert `%v` to string", reflect.TypeOf(x))
+	}
+
+	return v, nil
+}
+
 func toTime(x interface{}) (time.Time, error) {
 	if x == nil {
 		return time.Time{}, errors.New("cannot convert nil to type time.Time")

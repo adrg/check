@@ -71,6 +71,8 @@ func compare(x interface{}, cmp *cmpField) error {
 		return compareUint64(v.Uint(), cmp)
 	case reflect.Float32, reflect.Float64:
 		return compareFloat64(v.Float(), cmp)
+	case reflect.String:
+		return compareString(v.String(), cmp)
 	case reflect.Struct:
 		if t, err := toTime(x); err == nil {
 			return compareTime(t, cmp)
@@ -142,6 +144,36 @@ func compareUint64(x uint64, cmp *cmpField) error {
 
 func compareFloat64(x float64, cmp *cmpField) error {
 	term, err := toFloat64(cmp.term)
+	if err != nil {
+		return err
+	}
+	op := cmp.op
+
+	var ok bool
+	switch op {
+	case eq:
+		ok = x == term
+	case ne:
+		ok = x != term
+	case lt:
+		ok = x < term
+	case lte:
+		ok = x <= term
+	case gt:
+		ok = x > term
+	case gte:
+		ok = x >= term
+	}
+
+	if !ok {
+		return fmt.Errorf(cmpErrs[op], cmpOps[op], x, term)
+	}
+
+	return nil
+}
+
+func compareString(x string, cmp *cmpField) error {
+	term, err := toString(cmp.term)
 	if err != nil {
 		return err
 	}
