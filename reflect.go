@@ -76,13 +76,14 @@ func toString(x interface{}) (string, error) {
 	if x == nil {
 		return "", errors.New("cannot convert nil to type string")
 	}
+	v := reflect.ValueOf(x)
 
-	v, ok := x.(string)
-	if !ok {
-		return "", fmt.Errorf("cannot convert `%v` to string", reflect.TypeOf(x))
+	kind := v.Kind()
+	if kind == reflect.String {
+		return v.String(), nil
 	}
 
-	return v, nil
+	return "", fmt.Errorf("cannot convert `%v` to type string", kind)
 }
 
 func toTime(x interface{}) (time.Time, error) {
